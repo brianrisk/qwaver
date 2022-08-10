@@ -7,7 +7,7 @@
 
 Parameterize! Visualize! Collaboratize?!
 
-[![Join the chat at https://gitter.im/qwaver-dev/community](https://badges.gitter.im/qwaver-dev/community.svg)](https://gitter.im/qwaver-dev/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/qwaver-dev/community](https://badges.gitter.im/qwaver-dev/community.svg)](https://gitter.im/qwaver-dev/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://gitter.im/qwaver-io/community](https://badges.gitter.im/qwaver-io/community.svg)](https://gitter.im/qwaver-io/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 <a href="https://github.com/brianrisk/qwaver/graphs/contributors">
 <img src="https://img.shields.io/github/contributors/brianrisk/qwaver.svg">
 </a>
