@@ -2,3 +2,4 @@
 .idea/
 db.sqlite3
 media/profile_pics
+*__pycache__*
