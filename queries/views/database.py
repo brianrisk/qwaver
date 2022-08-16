@@ -58,6 +58,9 @@ class DatabaseEditView(LoginRequiredMixin, UpdateView):
         user_can_access_database(self.request.user, self.get_object())
         return True
 
+    def get_success_url(self):
+        return reverse('database-detail', args=[self.object.id])
+
 
 class DatabaseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Database

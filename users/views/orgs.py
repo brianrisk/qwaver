@@ -61,6 +61,9 @@ class OrganizationEditView(LoginRequiredMixin, UpdateView):
         user_can_access_org(self.request.user, obj)
         return obj
 
+    def get_success_url(self):
+        return reverse('organization-detail', args=[self.object.id])
+
 
 # todo cannot delete org if the org is currently selected in user's profile
 #  or anyone's profile for that matter!
