@@ -63,7 +63,7 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand mr-4" href="{% url 'queries-home' %}">
-                <img src="/media/qwaver-logo.png" height="30" style="margin: 10px;" alt="QWAVER">
+                <img src="{% static 'images/qwaver-logo.png' %}" height="30" style="margin: 10px;" alt="QWAVER">
                 {% if user.is_authenticated and user.profile.selected_organization != Null %}
                     : {{ user.profile.selected_organization }}
                 {% endif %}

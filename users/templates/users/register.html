@@ -8,6 +8,8 @@
             <fieldset class="form-group">
                 {{ form|crispy }}
             </fieldset>
+            
+            <a href=" {% url 'social:begin' 'google-oauth2' %} "><i class="fa fa-google"></i>Google</a>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Next →</button>
             </div>

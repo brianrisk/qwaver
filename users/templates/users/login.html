@@ -9,6 +9,7 @@
                 {{ form|crispy }}
             </fieldset>
             <div class="form-group">
+                <a href=" {% url 'social:begin' 'google-oauth2' %} "><i class="fa fa-google"></i>Google</a>
                 <button class="btn btn-outline-info" type="submit">Login</button>
                 <small class="text-muted ml-2">
                     <a href="{% url 'password_reset' %}">Forgot Password?</a>

@@ -1,6 +1,6 @@
 certifi==2022.5.18.1
 chardet==4.0.0
-Django==4.0.4
+Django
 django-crispy-forms==1.14.0
 factory_boy==3.2.1  # For defining model factories for unit testing
 idna==3.3
@@ -9,7 +9,7 @@ pytz==2022.1
 requests==2.27.1
 urllib3==1.26.9
 sqlalchemy==1.4.36
-pandas~=1.4.2
+pandas
 numpy
 matplotlib~=3.5.2
 psycopg2-binary==2.9.3

@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('queries.urls')),
     path('', include('users.urls')),
+    path('social-auth/',include('social_django.urls',namespace='social')),
 ]
 # appears to be required on production as well as local
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
