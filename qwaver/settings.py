@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'social_django',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -214,3 +214,8 @@ SERVER_EMAIL = 'server@qwaver.io'
 #         },
 #     },
 # }
+
+CSRF_TRUSTED_ORIGINS = ['https://falconxsoft.com']
+
+# new update
+
