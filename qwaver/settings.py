@@ -68,7 +68,7 @@ DEFAULT_APPS = [
 
 THIRD_PARTY_APPS = [
     'crispy_forms',
-    'social_django'
+    # 'social_django'
 ]
 
 LOCAL_APPS = [
