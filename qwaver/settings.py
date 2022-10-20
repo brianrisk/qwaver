@@ -35,7 +35,9 @@ config['config'] = {
     'EMAIL_PORT': '0',
     'EMAIL_USE_TLS': 'True',
     'EMAIL_HOST_USER': 'xxxxxxxxxx',
-    'EMAIL_HOST_PASSWORD': 'xxxxxxxxxx'
+    'EMAIL_HOST_PASSWORD': 'xxxxxxxxxx',
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY': 'xxxxxxxxxx',
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET': 'xxxxxxxxxx',
 }
 config.read(ini_file)
 
@@ -55,10 +57,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
-INSTALLED_APPS = [
-    'queries.apps.QueriesConfig',
-    'users.apps.UsersConfig',
-    'crispy_forms',
+DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +65,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+THIRD_PARTY_APPS = [
+    'crispy_forms',
+    'social_django'
+]
+
+LOCAL_APPS = [
+    'queries.apps.QueriesConfig',
+    'users.apps.UsersConfig',
+]
+
+INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
@@ -77,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'qwaver.urls'
@@ -184,6 +196,14 @@ EMAIL_HOST_PASSWORD = config.get('config', 'EMAIL_HOST_PASSWORD')
 
 ADMINS = [('Brian', 'geneffects@gmail.com')]
 SERVER_EMAIL = 'server@qwaver.io'
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get('config', 'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get('config', 'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 # LOGGING = {
 #     'version': 1,

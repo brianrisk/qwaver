@@ -16,3 +16,4 @@ psycopg2-binary==2.9.3
 pymysql~=1.0.2
 python-dateutil~=2.8.2
 cryptography~=37.0.4
+social-auth-app-django==5.0.0
