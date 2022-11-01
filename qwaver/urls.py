@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('queries/', include('queries.urls'))
 """
+from django.template.defaulttags import url
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -20,7 +21,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('queries.urls')),
-    path('', include('users.urls')),
+    path('', include('users.urls'))
 ]
 # appears to be required on production as well as local
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#social django: https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
+urlpatterns += url('', include('social_django.urls', namespace='social'))
