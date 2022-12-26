@@ -17,7 +17,11 @@ Parameterize! Visualize! Collaboratize?!
 [Latest Build](#latest-build) •[Use Cases](#use-cases) • [Help!](#help) • [Installation](#installation)
 • [Thanks](#thank-yous)
 
-[![Qwaver Intro](http://img.youtube.com/vi/0jPneT1IkNI/0.jpg)](http://www.youtube.com/watch?v=0jPneT1IkNI "Qwaver Intro")
+<a href="http://qwaver.io">
+    <img src="http://qwaver.io/static/queries/images/screen-record-2.gif" alt="qwaver logo">
+</a>
+
+
 </div>
 
 ## Latest Build
@@ -68,6 +72,9 @@ a different configuration:
 Duplicate the file `settings-template.ini` in the `qwaver`
 directory (the same directory that contains `settings.py`) and rename to
 `settings.ini`. Update the settings for your particular environment..
+
+## Intro video:
+[![Qwaver Intro](http://img.youtube.com/vi/0jPneT1IkNI/0.jpg)](http://www.youtube.com/watch?v=0jPneT1IkNI "Qwaver Intro")
 
 ## Help!
 
