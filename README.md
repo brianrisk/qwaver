@@ -43,6 +43,23 @@ python3 manage.py runserver
 
 When the server is running, go to [localhost](http://localhost:8000)
 
+<div align="center">
+<a href="http://qwaver.io">
+    <img src="http://qwaver.io/static/queries/images/three-screen-shots.jpg" alt="qwaver logo">
+</a>
+</div>
+
+## Use Cases
+**Turning queries into parameterized tools**: The ability to turn queries into parameterized tools can be very useful, as it allows you to reuse queries with different input parameters without having to rewrite the underlying SQL. This can make it easier to use your queries in different contexts, and can help you to avoid making mistakes when modifying complex queries.
+
+**Saving queries**: Being able to save queries can be very helpful, as it allows you to reuse queries that you have written in the past, or to share queries with others. This can save you time and effort, and help you to be more productive.
+
+**Automatically creating charts**: allows you to quickly visualize and understand your data. This can be particularly useful if you are working with large or complex datasets, as it can help you to identify trends and patterns that may not be immediately apparent from the raw data.
+
+**Saving a history of query edits**: Being able to save a history of query edits can be very useful, as it allows you to review and revert to previous versions of your queries if necessary. This can be especially helpful if you make a mistake while editing a query, or if you need to compare different versions of a query to understand how it has evolved over time.
+
+**Saving a history of query results**: allows you to review and compare the results of different queries over time. This can be particularly useful if you are tracking changes in data over time, or if you are working with data that is updated on a regular basis.
+
 ### Configurations
 
 The above installation will run with default settings using a local sqlite database. However, if you'd like to run with
@@ -51,37 +68,6 @@ a different configuration:
 Duplicate the file `settings-template.ini` in the `qwaver`
 directory (the same directory that contains `settings.py`) and rename to
 `settings.ini`. Update the settings for your particular environment..
-
-<div align="center">
-<a href="http://qwaver.io">
-    <img src="http://qwaver.io/static/queries/images/three-screen-shots.jpg" alt="qwaver logo">
-</a>
-</div>
-
-## Use Cases
-
-Boss: Hey, do you have time for {business question involving our databases}?
-
-You: Sure!  Give me 20 minutes..
-
-17 minutes later...
-
-You: Here you go!  See attached chart and data!
-
-Boss: Thanks!  could you do 100 similar variations with different time periods and countries?
-
-Your skills as a query artist were definitely needed that first time. But the second time? That's just changing a few
-key values. Your boss could do that himself... but he isn't comfortable with SQL.
-
-If you're like me, you have hundreds of queries stored in your DB admin tool for several connected DBs. A lot your time
-is spent searching through them, altering WHERE clauses, exporting the results, plotting charts, and emailing the
-results (chart + data + query for validation). Often you've got others on your team doing the exact same thing
-re-inventing the wheel left and right.
-
-* **Q:** Don't other tools out there help with this?
-    * **A:** Yeah, but they all require you (shudder) learn a new platform. Be it a "simple" markup language (lookin' at
-      you, Looker) or some sort of intricate UI designed more for dashboards than actually getting insights. You already
-      know your query language, let's leverage that strength!
 
 ## Help!
 
@@ -148,6 +134,7 @@ Helping with this project will make you one of the cooler people that I know. Ho
 * csv import
 
 ### Issues:
+* uploading files or profile images may overwrite each other with name collision
 
 ### Efficiency:
 
@@ -162,17 +149,6 @@ If you see any ways that the app could be improved in these ways, let's work on 
 * HTML/CSS styling
 * unit tests
 * support for more databases
-
-## The Data Model
-
-* The hierarchy is like this:
-    * Org -> Database -> Query -> Result
-    * Each "->" represents a one-to-many relationship
-* Users and Organizations
-    * User and Organization have a many-to-many relationship with the connection defined by UserOrganization
-        * Each organization can have many users
-        * Each user can belong to many organizations
-    * When using Qwaver, a user has a selected organization defined in their profile
 
 ## Thank yous
 

@@ -167,15 +167,9 @@ class QueryCreateView(LoginRequiredMixin, CreateView):
     # https://stackoverflow.com/questions/47363190/from-the-view-how-do-i-pass-custom-choices-into-a-forms-choicefield
     # https://stackoverflow.com/questions/5666505/how-to-subclass-djangos-generic-createview-with-initial-data
     def get_form(self, *args, **kwargs):
-        user = self.request.user
         form = super().get_form(*args, **kwargs)
         form.fields['database'].queryset = get_org_databases(self)
-        most_recent_database = get_most_recent_database(self)
-        if most_recent_database is None:
-            databases = get_org_databases(self)
-            most_recent_database = databases[0]
-        if most_recent_database is not None:
-            form.fields['database'].initial = most_recent_database
+        form.fields['database'].initial = get_most_recent_database(self)
         return form
 
     def form_valid(self, form):

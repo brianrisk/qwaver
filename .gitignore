@@ -2,6 +2,7 @@
 .idea/
 db.sqlite3
 media/profile_pics
+media/uploaded_files
 *__pycache__*
 debug.log
 env

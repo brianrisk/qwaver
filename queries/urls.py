@@ -39,4 +39,8 @@ urlpatterns = [
     path('versions/<int:query_id>/', QueryVersionListView.as_view(), name='query-versions'),
     path('versions/<int:query_id>/revert/<int:v>', QueryVersionRevertView.as_view(), name='query-version-revert'),
 
+    # loading data
+    # path('load/', load.upload_file, name='load'),
+    path('load/', LoadFileCreateView.as_view(), name='load'),
+
 ]
