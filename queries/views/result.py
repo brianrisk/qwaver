@@ -6,9 +6,7 @@ from io import BytesIO
 import matplotlib.pyplot
 import matplotlib.pyplot as plt
 import pandas
-import pandas as pd
 import sqlalchemy
-from dateutil.parser import parse
 from django.contrib.auth import authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -20,7 +18,7 @@ from pandas import DataFrame
 from pandas.api.types import is_numeric_dtype
 from django.utils import timezone
 
-from . import user_can_access_query
+from ..common.access import user_can_access_query
 from ..common.components import users_recent_results
 from ..models import Query, Parameter, Result, Value, QueryError
 
@@ -139,52 +137,6 @@ class ResultData:
         self.param_values = param_values
 
 
-# 1. Getting the user, query and parameters
-# 2. Creating a connection to the db
-# 3. Replacing placeholder parameters with their values
-# 4. Executing the query
-def get_data(request, query):
-    user = request.user
-    user_can_access_query(user, query)
-    params = Parameter.objects.filter(query=query)
-    # creating context for params data
-    sql = query.query
-    result_title = query.title
-    param_values = {}
-    for param in params:
-        param_value = request.POST.get(param.name)
-        if param_value is None:
-            param_value = param.default
-        param_values[param.name] = param_value
-        # if there are results, save the param value as default
-        sql = sql.replace(f"{{{param.name}}}", param_value)
-        # adding param values to the result title
-        result_title = f"{result_title};\n {param.name}: {param_value}"
-    # formatting the text to avoid problems with the % character in queries
-    sql = sqlalchemy.text(sql)
-    db = query.database
-    engine = db.get_engine()
-
-    with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as connection:
-        resolver = connection.execute(sql)
-        # -1 rowcount when it's not a SELECT.
-        if resolver.rowcount == -1:
-            df = pandas.DataFrame()
-        if resolver.rowcount == 0:
-            df = DataFrame(columns=resolver.keys())
-        else:
-            df_full = DataFrame(resolver.fetchall())
-            df_full.columns = resolver.keys()
-            df = df_full.head(max_table_rows)
-        engine.dispose()
-        return ResultData(
-            df=df,
-            title=result_title,
-            sql=sql,
-            param_values=param_values
-        )
-
-
 # with the result data, creating charts and tables
 def get_result(request, query):
     data = get_data(request, query)
@@ -235,6 +187,51 @@ def get_result(request, query):
         value.save()
     return result
 
+
+# 1. Getting the user, query and parameters
+# 2. Creating a connection to the db
+# 3. Replacing placeholder parameters with their values
+# 4. Executing the query
+def get_data(request, query):
+    user = request.user
+    user_can_access_query(user, query)
+    params = Parameter.objects.filter(query=query)
+    # creating context for params data
+    sql = query.query
+    result_title = query.title
+    param_values = {}
+    for param in params:
+        param_value = request.POST.get(param.name)
+        if param_value is None:
+            param_value = param.default
+        param_values[param.name] = param_value
+        # if there are results, save the param value as default
+        sql = sql.replace(f"{{{param.name}}}", param_value)
+        # adding param values to the result title
+        result_title = f"{result_title};\n {param.name}: {param_value}"
+    # formatting the text to avoid problems with the % character in queries
+    sql = sqlalchemy.text(sql)
+    db = query.database
+    engine = db.get_engine()
+
+    with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as connection:
+        resolver = connection.execute(sql)
+        # -1 rowcount when it's not a SELECT.
+        if resolver.rowcount == -1:
+            df = pandas.DataFrame()
+        if resolver.rowcount == 0:
+            df = DataFrame(columns=resolver.keys())
+        else:
+            df_full = DataFrame(resolver.fetchall())
+            df_full.columns = resolver.keys()
+            df = df_full.head(max_table_rows)
+        engine.dispose()
+        return ResultData(
+            df=df,
+            title=result_title,
+            sql=sql,
+            param_values=param_values
+        )
 
 # https://www.section.io/engineering-education/representing-data-in-django-using-matplotlib/
 # possible idea for returning only image from endpoint: https://groups.google.com/g/pydata/c/yxKcJI4Y7e8
@@ -338,21 +335,3 @@ def get_table(df):
         return df.to_html(classes=[css_classes],
                           table_id=table_id,
                           index=False)
-
-
-# https://stackoverflow.com/questions/25341945/check-if-string-has-date-any-format
-def is_date(string):
-    try:
-        parse(string, fuzzy=False)
-        return True
-    except ValueError:
-        return False
-
-
-# https://stackoverflow.com/questions/354038/how-do-i-check-if-a-string-is-a-number-float?page=1&tab=scoredesc#tab-top
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except Exception:
-        return False

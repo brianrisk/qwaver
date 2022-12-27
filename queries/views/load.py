@@ -1,16 +1,14 @@
 import csv
 import io
-import re
+import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.views.generic import CreateView
 
+from queries.views.result import *
 from queries.common.access import get_org_databases, get_most_recent_database
 from queries.common.string_formatting import sanitize_name, is_int, is_float, is_date
-from queries.forms import UploadFileForm
-from queries.models import LoadFile
+from queries.models import LoadFile, Query
 
 
 class LoadFileCreateView(LoginRequiredMixin, CreateView):
@@ -26,19 +24,22 @@ class LoadFileCreateView(LoginRequiredMixin, CreateView):
         return form
 
     def form_valid(self, form):
+        user = self.request.user
+        # setting this user as creator
+        form.instance.creator = user
         source_file = self.request.FILES['source_file']
+        file_name = os.path.basename(source_file.name)
         decoded_file = source_file.read().decode('utf-8')
         file_string = io.StringIO(decoded_file)
         data = list(csv.reader(file_string, delimiter=","))
         # TODO error if data has less than two rows
         # TODO throw exception if there are more than 1000 rows
         table_name = sanitize_name(form.instance.table_name)
-        create_table(data, table_name)
-        form.instance.creator = self.request.user
+        create_table(data, table_name, form.instance.database, user, self.request, file_name)
         return super().form_valid(form)
 
 
-def create_table(data, table_name):
+def create_table(data, table_name, database, user, request, file_name):
     columns_raw = data[0]
     # sanitize column names
     column_names = []
@@ -68,8 +69,17 @@ def create_table(data, table_name):
     sql_table_command = f'CREATE TABLE IF NOT EXISTS {table_name} ('
     for i, column_name in enumerate(column_names):
         sql_table_command += f'{column_name} {data_types[i]}, '
+    # removing the trailing comma and space, adding closing chars
     sql_table_command = sql_table_command[:-2] + ');'
-    print(sql_table_command)
+    create_query = Query(
+        title=f"create table {table_name}",
+        description=f"creating table to load {file_name}",
+        database=database,
+        query=sql_table_command,
+        author=user
+    )
+    create_query.save()
+    create_query_result = get_result(request, create_query)
 
     # Generate SQL Insert command
     sql_insert_command = f"INSERT INTO {table_name} VALUES ("
@@ -85,25 +95,3 @@ def create_table(data, table_name):
                 sql_insert_command += f'{row[i]}, '
         sql_insert_command = sql_insert_command[:-2] + '), \n'
     sql_insert_command = sql_insert_command[:-3] + ';'
-    print(sql_insert_command)
-
-
-# drawn from: https://docs.djangoproject.com/en/4.1/topics/http/file-uploads/
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/')
-    else:
-        form = UploadFileForm()
-    return render(request, 'queries/load_file_form.html', {'form': form})
-
-
-def handle_uploaded_file(f):
-    decoded_file = f.read().decode('utf-8')
-    file_string = io.StringIO(decoded_file)
-    data = list(csv.reader(file_string, delimiter=","))
-    print(data[0])
-    # for row in data:
-    #     print(row)

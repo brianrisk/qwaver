@@ -56,13 +56,13 @@ When the server is running, go to [localhost](http://localhost:8000)
 ## Use Cases
 **Turning queries into parameterized tools**: The ability to turn queries into parameterized tools can be very useful, as it allows you to reuse queries with different input parameters without having to rewrite the underlying SQL. This can make it easier to use your queries in different contexts, and can help you to avoid making mistakes when modifying complex queries.
 
-**Saving queries**: Being able to save queries can be very helpful, as it allows you to reuse queries that you have written in the past, or to share queries with others. This can save you time and effort, and help you to be more productive.
-
 **Automatically creating charts**: allows you to quickly visualize and understand your data. This can be particularly useful if you are working with large or complex datasets, as it can help you to identify trends and patterns that may not be immediately apparent from the raw data.
 
 **Saving a history of query edits**: Being able to save a history of query edits can be very useful, as it allows you to review and revert to previous versions of your queries if necessary. This can be especially helpful if you make a mistake while editing a query, or if you need to compare different versions of a query to understand how it has evolved over time.
 
 **Saving a history of query results**: allows you to review and compare the results of different queries over time. This can be particularly useful if you are tracking changes in data over time, or if you are working with data that is updated on a regular basis.
+
+**Searchable queries**: 
 
 ### Configurations
 
