@@ -152,11 +152,14 @@ def get_result(request, query):
     if row_count == 1 and column_count == 1:
         single = df.iat[0, 0]
     elif row_count == 0:
-        single = str(list(df.columns.values))
+        if len(df.columns.values) == 0:
+            single = "Success. (no rows returned)"
+        else:
+            column_titles = str(list(df.columns.values))
+            single = f"columns: {column_titles}"
     elif df.empty:
         single = empty_df_message
     else:
-        # single = str(list(df.columns.values))
         single = None
     result = Result(
         user=request.user,
@@ -232,6 +235,7 @@ def get_data(request, query):
             sql=sql,
             param_values=param_values
         )
+
 
 # https://www.section.io/engineering-education/representing-data-in-django-using-matplotlib/
 # possible idea for returning only image from endpoint: https://groups.google.com/g/pydata/c/yxKcJI4Y7e8

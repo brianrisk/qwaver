@@ -121,7 +121,15 @@ class Query(models.Model):
 
     def get_latest_version(self):
         version_number = self.get_version_number()
-        query_version = QueryVersion.objects.get(query=self, version_number=version_number)
+        try:
+            query_version = QueryVersion.objects.get(query=self, version_number=version_number)
+        except QueryVersion.DoesNotExist:
+            query_version = QueryVersion(
+                query=self,
+                version_number=version_number,
+                query_text=self.query,
+                user=self.author
+            )
         return query_version
 
     def increment_success(self):
@@ -135,6 +143,7 @@ class Query(models.Model):
         if version is not None:
             version.failure_count += 1
             version.save()
+
 
 class QueryVersion(models.Model):
     query = models.ForeignKey(Query, on_delete=models.CASCADE)
