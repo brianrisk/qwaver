@@ -282,7 +282,7 @@ def get_chart(df, title):
                 and first_value is not None
                 and second_value is not None
                 and third_value is not None
-                and isinstance(first_value, datetime.date)
+                and (isinstance(first_value, datetime.date) or isinstance(first_value, numbers.Number))
                 and isinstance(second_value, str)
                 and isinstance(third_value, numbers.Number))
     if not is_bar_or_pie and not is_pivot:

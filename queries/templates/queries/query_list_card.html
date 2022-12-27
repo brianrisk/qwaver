@@ -5,8 +5,8 @@
             {#            <img class="rounded-circle article-img profile-image-top-right" src="{{ user.profile.image.url }}">#}
 
             <div>
-                <h5 class="card-title">{{ query }}</h5>
-                <!--- show latest chart or result -->
+                <h5 class="card-title">{{ query.title }}</h5>
+                <!--- show the latest chart or result -->
                 {% if query.latest_result != null %}
                     {% if query.latest_result.chart != null %}
                         <img src="data:image/{{ query.latest_result.image_encoding }};base64,{{ query.latest_result.chart|safe }}"
@@ -15,7 +15,6 @@
                         {% if query.description != null %}
                             {{ query.description }}<br>
                         {% endif %}
-                        {#                        <h1 class="display-3 text-center">{{ query.latest_result.single }}</h1>#}
                         <div>{{ query.latest_result.single }}</div>
                     {% endif %}
                 {% endif %}
@@ -25,11 +24,6 @@
                         {{ query.last_run_date|timesince }} ago<br>
                     </p>
                 {% endif %}
-                {#                    {{ query.database }}<br>#}
-                {#                <a href="{% url 'query-detail' query.id %}" class="btn btn-primary stretched-link">Go</a>#}
-                {#                {% if query.author == user %}#}
-                {#                    <a href="{% url 'query-update' query.id %}" class="btn btn-outline-secondary ml-1">Edit</a>#}
-                {#                {% endif %}#}
             </div>
         </div>
     {% endfor %}

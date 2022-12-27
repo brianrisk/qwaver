@@ -37,8 +37,8 @@ class LoadFileCreateView(LoginRequiredMixin, CreateView):
         # TODO error if data has less than two rows
         # TODO throw exception if there are more than 1000 rows
         table_name = sanitize_name(form.instance.table_name)
-        create_table(data, table_name, form.instance.database, user, self.request, file_name)
-        return super().form_valid(form)
+        result = create_table(data, table_name, form.instance.database, user, self.request, file_name)
+        return redirect(reverse('result-detail', args=[result.pk]))
 
 
 def create_table(data, table_name, database, user, request, file_name):
@@ -117,4 +117,4 @@ def create_table(data, table_name, database, user, request, file_name):
     )
     show_query.save()
     show_table_result = get_result(request, show_query)
-    return redirect(reverse('result-detail', args=[show_table_result.pk]))
+    return show_table_result
