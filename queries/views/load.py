@@ -31,6 +31,7 @@ class LoadFileCreateView(LoginRequiredMixin, CreateView):
         file_string = io.StringIO(decoded_file)
         data = list(csv.reader(file_string, delimiter=","))
         # TODO error if data has less than two rows
+        # TODO throw exception if there are more than 1000 rows
         table_name = sanitize_name(form.instance.table_name)
         create_table(data, table_name)
         form.instance.creator = self.request.user
@@ -61,7 +62,7 @@ def create_table(data, table_name):
             use_quotes.append(True)
         else:
             data_types.append('VARCHAR(255)')
-            use_quotes.append(False)
+            use_quotes.append(True)
 
     # Generate SQL Table command
     sql_table_command = f'CREATE TABLE IF NOT EXISTS {table_name} ('
@@ -70,15 +71,21 @@ def create_table(data, table_name):
     sql_table_command = sql_table_command[:-2] + ');'
     print(sql_table_command)
 
-    # # Generate SQL Insert command
-    # sql_insert_command = f"INSERT INTO {table_name} VALUES "
-    # for row in csv_reader:
-    #     sql_insert_command += '('
-    #     for value in row:
-    #         sql_insert_command += '"{}", '.format(value)
-    #     sql_insert_command = sql_insert_command[:-2] + '), '
-    # sql_insert_command = sql_insert_command[:-2] + ';'
-    # print(sql_insert_command)
+    # Generate SQL Insert command
+    sql_insert_command = f"INSERT INTO {table_name} VALUES ("
+    for column_name in column_names:
+        sql_insert_command += f"{column_name}, "
+    sql_insert_command = sql_insert_command[:-2] + ')\n'
+    for row in data[1:]:
+        sql_insert_command += '('
+        for i, is_quoted in enumerate(use_quotes):
+            if is_quoted:
+                sql_insert_command += f"'{row[i]}', "
+            else:
+                sql_insert_command += f'{row[i]}, '
+        sql_insert_command = sql_insert_command[:-2] + '), \n'
+    sql_insert_command = sql_insert_command[:-3] + ';'
+    print(sql_insert_command)
 
 
 # drawn from: https://docs.djangoproject.com/en/4.1/topics/http/file-uploads/

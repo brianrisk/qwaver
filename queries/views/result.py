@@ -77,13 +77,13 @@ def execute(request, query_id):
         result = get_result(request, query)
         # record this is a success
         query.increment_success()
-        return result
+        return redirect(reverse('result-detail', args=[result.pk]))
     else:
         try:
             result = get_result(request, query)
             # record this is a success
             query.increment_success()
-            return result
+            return redirect(reverse('result-detail', args=[result.pk]))
         except Exception as err:
             # log the error
             query_error = QueryError(
@@ -233,7 +233,7 @@ def get_result(request, query):
             result=result
         )
         value.save()
-    return redirect(reverse('result-detail', args=[result.pk]))
+    return result
 
 
 # https://www.section.io/engineering-education/representing-data-in-django-using-matplotlib/
