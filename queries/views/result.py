@@ -17,6 +17,7 @@ from django.conf import settings
 from pandas import DataFrame
 from pandas.api.types import is_numeric_dtype
 from django.utils import timezone
+from sqlalchemy.exc import ResourceClosedError
 
 from ..common.access import user_can_access_query
 from ..common.components import users_recent_results
@@ -219,16 +220,17 @@ def get_data(request, query):
     engine = db.get_engine()
 
     with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as connection:
-        resolver = connection.execute(sql)
-        # -1 rowcount when it's not a SELECT.
-        if resolver.rowcount == -1:
+        try:
+            df = pandas.read_sql(sql, connection)
+            if len(df.index > max_table_rows):
+                df = df.head(max_table_rows)
+        # Error happens if now rows are returned (e.g. a drop or create statement)
+        # original solution used https://stackoverflow.com/a/12060886/2595659 and first
+        # made sure there were rows, but the solution did not always create a dataframe
+        # with the correct data types (they were being interpreted as object).
+        # Though I do not love this solution as there may be other reasons the connection is closed
+        except ResourceClosedError:
             df = pandas.DataFrame()
-        elif resolver.rowcount == 0:
-            df = DataFrame(columns=resolver.keys())
-        else:
-            df_full = DataFrame(resolver.fetchall())
-            df_full.columns = resolver.keys()
-            df = df_full.head(max_table_rows)
         engine.dispose()
         return ResultData(
             df=df,

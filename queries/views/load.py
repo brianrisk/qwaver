@@ -58,8 +58,7 @@ def create_table(data, table_name, database, user, request, file_name):
             data_types.append('INTEGER')
             use_quotes.append(False)
         elif is_float(value):
-            # data_types.append('DECIMAL(20,10)')
-            data_types.append('DECIMAL(10,2)')
+            data_types.append('DECIMAL(20,10)')
             use_quotes.append(False)
         elif is_date(value):
             data_types.append('DATE')
