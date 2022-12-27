@@ -12,19 +12,20 @@
                         <img src="data:image/{{ query.latest_result.image_encoding }};base64,{{ query.latest_result.chart|safe }}"
                              class="contain card-image" width="100%"/>
                     {% elif query.latest_result.single != null %}
-{#                        <h1 class="display-3 text-center">{{ query.latest_result.single }}</h1>#}
+                        {% if query.description != null %}
+                            {{ query.description }}<br>
+                        {% endif %}
+                        {#                        <h1 class="display-3 text-center">{{ query.latest_result.single }}</h1>#}
                         <div>{{ query.latest_result.single }}</div>
                     {% endif %}
                 {% endif %}
-                <p class="card-text">
-                    {% if query.latest_result != null %}
+
+                {% if query.latest_result != null %}
+                    <p class="card-text">
                         {{ query.last_run_date|timesince }} ago<br>
-                    {% endif %}
-                    {% if query.description != null %}
-                        {{ query.description }}<br>
-                    {% endif %}
-                    {#                    {{ query.database }}<br>#}
-                </p>
+                    </p>
+                {% endif %}
+                {#                    {{ query.database }}<br>#}
                 {#                <a href="{% url 'query-detail' query.id %}" class="btn btn-primary stretched-link">Go</a>#}
                 {#                {% if query.author == user %}#}
                 {#                    <a href="{% url 'query-update' query.id %}" class="btn btn-outline-secondary ml-1">Edit</a>#}
