@@ -87,7 +87,7 @@ class Query(models.Model):
     version = models.ForeignKey("queries.QueryVersion", related_name='+', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title} ({self.pk})"
 
     def get_absolute_url(self):
         return reverse('query-detail', kwargs={'pk': self.pk})
@@ -130,6 +130,7 @@ class Query(models.Model):
                 query_text=self.query,
                 user=self.author
             )
+            query_version.save()
         return query_version
 
     def increment_success(self):

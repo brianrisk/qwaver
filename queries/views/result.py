@@ -178,6 +178,7 @@ def get_result(request, query):
     # update query with latest result
     query.run_count += 1
     query.last_run_date = timezone.now()
+    query.last_viewed = timezone.now()
     query.latest_result = result
     query.save()
     # save parameter values
@@ -222,7 +223,7 @@ def get_data(request, query):
         # -1 rowcount when it's not a SELECT.
         if resolver.rowcount == -1:
             df = pandas.DataFrame()
-        if resolver.rowcount == 0:
+        elif resolver.rowcount == 0:
             df = DataFrame(columns=resolver.keys())
         else:
             df_full = DataFrame(resolver.fetchall())

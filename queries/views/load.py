@@ -3,12 +3,14 @@ import io
 import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import CreateView
 
-from queries.views.result import *
 from queries.common.access import get_org_databases, get_most_recent_database
 from queries.common.string_formatting import sanitize_name, is_int, is_float, is_date
 from queries.models import LoadFile, Query
+from queries.views.result import get_result
 
 
 class LoadFileCreateView(LoginRequiredMixin, CreateView):
@@ -56,7 +58,8 @@ def create_table(data, table_name, database, user, request, file_name):
             data_types.append('INTEGER')
             use_quotes.append(False)
         elif is_float(value):
-            data_types.append('DECIMAL(20,10)')
+            # data_types.append('DECIMAL(20,10)')
+            data_types.append('DECIMAL(10,2)')
             use_quotes.append(False)
         elif is_date(value):
             data_types.append('DATE')
@@ -66,26 +69,26 @@ def create_table(data, table_name, database, user, request, file_name):
             use_quotes.append(True)
 
     # Generate SQL Table command
-    sql_table_command = f'CREATE TABLE IF NOT EXISTS {table_name} ('
+    sql_table_command = f'DROP TABLE IF EXISTS {table_name};\nCREATE TABLE IF NOT EXISTS {table_name} (\n'
     for i, column_name in enumerate(column_names):
-        sql_table_command += f'{column_name} {data_types[i]}, '
-    # removing the trailing comma and space, adding closing chars
-    sql_table_command = sql_table_command[:-2] + ');'
-    create_query = Query(
-        title=f"create table {table_name}",
-        description=f"creating table to load {file_name}",
+        sql_table_command += f'  {column_name} {data_types[i]}, \n'
+    # removing the trailing ', \n', adding closing chars
+    sql_table_command = sql_table_command[:-3] + '\n);'
+    create_table_query = Query(
+        title=f"Create table {table_name}",
+        description=f"Creating table to match {file_name}",
         database=database,
         query=sql_table_command,
         author=user
     )
-    create_query.save()
-    create_query_result = get_result(request, create_query)
+    create_table_query.save()
+    get_result(request, create_table_query)
 
     # Generate SQL Insert command
-    sql_insert_command = f"INSERT INTO {table_name} VALUES ("
+    sql_insert_command = f"INSERT INTO {table_name} ("
     for column_name in column_names:
         sql_insert_command += f"{column_name}, "
-    sql_insert_command = sql_insert_command[:-2] + ')\n'
+    sql_insert_command = sql_insert_command[:-2] + ') VALUES\n'
     for row in data[1:]:
         sql_insert_command += '('
         for i, is_quoted in enumerate(use_quotes):
@@ -95,3 +98,24 @@ def create_table(data, table_name, database, user, request, file_name):
                 sql_insert_command += f'{row[i]}, '
         sql_insert_command = sql_insert_command[:-2] + '), \n'
     sql_insert_command = sql_insert_command[:-3] + ';'
+    insert_query = Query(
+        title=f"Inserting data into {table_name}",
+        description=f"Data from {file_name}",
+        database=database,
+        query=sql_insert_command,
+        author=user
+    )
+    insert_query.save()
+    get_result(request, insert_query)
+
+    # Generate SQL show table
+    sql_show_table = f"SELECT * FROM {table_name} LIMIT 20;"
+    show_query = Query(
+        title=f"Sample contents of {table_name}",
+        database=database,
+        query=sql_show_table,
+        author=user
+    )
+    show_query.save()
+    show_table_result = get_result(request, show_query)
+    return redirect(reverse('result-detail', args=[show_table_result.pk]))
