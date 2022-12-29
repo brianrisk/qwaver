@@ -1,0 +1,22 @@
+{% extends "queries/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        {% if is_setup %}
+            <h1>
+            New Referral
+            </h1>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

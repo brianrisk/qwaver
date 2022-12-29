@@ -1,0 +1,12 @@
+{% extends "queries/base.html" %}
+{% block content %}
+    <h2>Referrals</h2>
+    <a class="btn btn-primary mb-4 mt-4" href="{% url 'referral-create' %}" role="button">New Referral</a>
+    {% for object in object_list %}
+        <article class="media content-section">
+            <div class="media-body">
+                <h2><a class="article-title" href="{% url 'referral-update' object.id %}">{{ object.pk }}: {{ object.title }}</a></h2>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

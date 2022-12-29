@@ -3,7 +3,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from users import views as user_views
-from users.views import OrganizationCreateView, OrganizationEditView, OrganizationListView, OrganizationDeleteView
+from users.views import OrganizationCreateView, OrganizationEditView, OrganizationListView, OrganizationDeleteView, \
+    ReferralCreateView, ReferralEditView, ReferralListView
 from users.views.invites import InvitationCreateView, InvitationEditView, InvitationListView, InvitationDeleteView
 
 urlpatterns = [
@@ -45,4 +46,8 @@ urlpatterns = [
     path('invitation/<int:pk>/edit/', InvitationEditView.as_view(), name='invitation-update'),
     path('invitations/', InvitationListView.as_view(), name='invitation-list'),
     path('invitation/<int:pk>/delete/', InvitationDeleteView.as_view(), name='invitation-delete'),
+
+    path('referrals/new/', ReferralCreateView.as_view(), name='referral-create'),
+    path('referrals/<int:pk>/edit/', ReferralEditView.as_view(), name='referral-update'),
+    path('referrals/', ReferralListView.as_view(), name='referral-list'),
 ]

@@ -161,6 +161,9 @@ Helping with this project will make you one of the cooler people that I know. Ho
 * automatically add a limit to every query
 * disable queries; don't delete them
 * https (helping set that on the DigitalOcean server)
+* drop-down menu to select organization if there is more than one org for the user
+* Have a result search where are the searches are the input fields for a given query. No search option if there are no input fields.
+* A way to be able to combine search results from one database into the quarry of another. For example, one day the base returns IDs and the other query on a different database uses those IDs.
 
 ### Issues:
 

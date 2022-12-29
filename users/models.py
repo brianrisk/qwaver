@@ -4,7 +4,6 @@ from PIL import Image
 
 
 class Organization(models.Model):
-
     name = models.CharField(max_length=64, help_text="Usually the name of your business or website")
     readonly_fields = ('id',)
 
@@ -31,6 +30,25 @@ class Invitation(models.Model):
         return self.creator.username + ", " + self.organization.name + ": " + self.email
 
 
+class Referral(models.Model):
+    ref_code = models.CharField(max_length=128,
+                                blank=True,
+                                default=None,
+                                help_text="a url slug like 'youtube_parameterized_queries'")
+    title = models.CharField(max_length=128)
+    url = models.CharField(max_length=128,
+                           blank=True,
+                           default=None,
+                           help_text="where this referral is coming from")
+    description = models.TextField(blank=True,
+                                   default=None, )
+    site = models.CharField(
+        max_length=128,
+        choices=(('youtube', 'youtube'), ('google ads', 'google ads'), ('other', 'other')),
+        default='other',
+        blank=True)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
@@ -41,7 +59,7 @@ class Profile(models.Model):
         blank=True,
         default=None)
     display_mode = models.IntegerField(choices=((1, 'light'), (2, 'dark'), (3, 'synthwave')), default=3, blank=True)
-    referral = models.CharField(max_length=128, null=True, default=None)
+    referral = models.ForeignKey(Referral, null=True, default=None, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return f'{self.user.username} Profile'
