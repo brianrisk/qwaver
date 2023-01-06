@@ -186,7 +186,7 @@ EMAIL_HOST_PASSWORD = config.get('config', 'EMAIL_HOST_PASSWORD')
 
 ADMINS = [('Brian', 'geneffects@gmail.com')]
 SERVER_EMAIL = 'server@qwaver.io'
-DEFAULT_FROM_EMAIL = SERVER_EMAIL
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 MAX_TABLE_ROWS = int(config.get('config', 'MAX_TABLE_ROWS'))
 

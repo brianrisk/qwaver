@@ -34,7 +34,8 @@ def register(request, ref_code=None):
             password = form.cleaned_data.get('password')
             messages.success(request, f'Your account has been created!')
             resolve_invitations(user, request)
-            send_verification_email(user, request)
+            # TODO: get email working, then activate this
+            # send_verification_email(user, request)
             login(request, user)
             # login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('queries-home')
